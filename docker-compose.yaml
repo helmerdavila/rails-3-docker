@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  app:
+    container_name: potato_backend
+    command: sh -c "bundle install && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    depends_on:
+      - mysql
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    restart: always
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+  mysql:
+    container_name: potato_db
+    image: mysql:8.0
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+  redis:
+    container_name: potato_redis
+    image: redis:6.2.6-alpine
+    restart: always
+    ports:
+      - 6379:6379
